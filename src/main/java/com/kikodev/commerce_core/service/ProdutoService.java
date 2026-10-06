@@ -1,11 +1,11 @@
 package com.kikodev.commerce_core.service;
 
+import com.kikodev.commerce_core.exceptions.NotFoundException;
 import com.kikodev.commerce_core.model.Produto;
 import com.kikodev.commerce_core.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -23,8 +23,9 @@ public class ProdutoService {
     }
 
     //Pesquisar produto por id
-    public Optional<Produto> pesquisarProdutoPorId(Long id) {
-        return produtoRepository.findById(id);
+    public Produto pesquisarProdutoPorId(Long id) {
+        return produtoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Produto com o ID " + id + " não encontrado."));
     }
 
     //Adicionar um produto
@@ -34,6 +35,9 @@ public class ProdutoService {
 
     //Remover um produto
     public void removerProduto(long id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new NotFoundException("Produto com o ID " + id + " não encontrado.");
+        }
         produtoRepository.deleteById(id);
     }
 

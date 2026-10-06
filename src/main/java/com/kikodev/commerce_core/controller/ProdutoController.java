@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/commerce-core")
@@ -24,12 +25,11 @@ public class ProdutoController {
         return produtoService.listarProdutos();
     }
 
-    @GetMapping("/{id}")
     //Endpoint para obter um produto pelo ID
-    public ResponseEntity<Produto> obterProdutoPorId(@PathVariable Long id) {
-        return produtoService.pesquisarProdutoPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obterProdutoPorId(@PathVariable Long id) {
+        Produto produto = produtoService.pesquisarProdutoPorId(id);
+        return ResponseEntity.ok(produto);
     }
 
     //Endpoint para adicionar um novo produto
